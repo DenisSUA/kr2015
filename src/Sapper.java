@@ -3,23 +3,27 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class Sapper extends JFrame implements ActionListener{
+public class Sapper extends JFrame implements ActionListener, ContainerListener{
     int blockr, blockc, width, heigth, num_of_mine,savedblockr,savedblockc,savednum_of_mine, savedlevel;
     int[][] colour;
-    JButton reset = new JButton("");
+    JButton reset = new JButton();
     boolean check = true;
-    boolean starttime = false;
+    boolean start_time = false;
     Stopwatch sw;
     MouseHandler mh;
     JButton[][] blocks;
     int[][] count_mine;
     Point p;
     JPanel panelb = new JPanel();
+    JPanel panelmt = new JPanel();
+    JTextField field_mine,field_time;
+
 
 
     Sapper() {
-        setLocation(400, 300);
+        setLocation(650, 300);
         setpanel(1,0,0,0);
+        setMenu();
 
         sw = new Stopwatch();
 
@@ -40,7 +44,7 @@ public class Sapper extends JFrame implements ActionListener{
 
     public void reset() {
         check = true;
-        starttime = false;
+        start_time = false;
         for (int i = 0; i < blockr; i++) {
             for (int j = 0; j < blockc; j++) {
                 colour[i][j] = 'w';
@@ -50,22 +54,22 @@ public class Sapper extends JFrame implements ActionListener{
 
     public void  setpanel(int level, int setr, int setc, int setm){
         if (level == 1){
-            width = 200;
-            heigth = 300;
-            blockr = 10;
-            blockc = 10;
+            width = 350;
+            heigth = 450;
+            blockr = 11;
+            blockc = 11;
             num_of_mine = 10;
         } else if (level == 2){
-            width = 320;
-            heigth = 416;
-            blockr = 16;
-            blockc = 16;
+            width = 520;
+            heigth = 616;
+            blockr = 18;
+            blockc = 18;
             num_of_mine = 70;
         } else if (level == 3){
-            width = 400;
-            heigth = 520;
-            blockr = 20;
-            blockc = 20;
+            width = 640;
+            heigth = 730;
+            blockr = 22;
+            blockc = 22;
             num_of_mine = 150;
         } else if (level == 4){
             width = (20 * setc);
@@ -76,8 +80,7 @@ public class Sapper extends JFrame implements ActionListener{
 
         }
 
-        savedblockr = blockr;
-        savedblockc = blockc;
+
         savednum_of_mine = num_of_mine;
         p = this.getLocation();
 
@@ -91,7 +94,55 @@ public class Sapper extends JFrame implements ActionListener{
         colour = new int[blockr][blockc];
 
         getContentPane().removeAll();
-        panelb.removeAll();
+        panelb.removeAll(); // изменяется размер кубиков
+
+        field_mine = new JTextField("   " + num_of_mine, 3);
+        field_mine.setEditable(false);
+        field_mine.setFont(new Font("", Font.BOLD, 35));
+        field_mine.setBackground(Color.DARK_GRAY);
+        field_mine.setForeground(Color.white);
+
+
+        field_time = new JTextField("    0", 3);
+        field_time.setEditable(false);
+        field_time.setFont(new Font("", Font.BOLD, 35));
+        field_time.setBackground(Color.DARK_GRAY);
+        field_time.setForeground(Color.WHITE);
+
+
+
+        panelmt.removeAll(); //панелька с временем и минами обретает еще одну кнопку
+        panelmt.setLayout(new BorderLayout());
+        panelmt.add(field_mine, BorderLayout.WEST);
+        panelmt.add(new Button("to begin a new game"), BorderLayout.CENTER);
+        panelmt.add(field_time, BorderLayout.EAST);
+
+
+
+        Dimension d = new Dimension(width, heigth);
+        panelb.setMinimumSize(panelb.getPreferredSize());// «не рекомендуется» увеличиваться или уменьшаться
+        GridLayout gl = new GridLayout(0, blockc);
+        panelb.setLayout(gl);
+        panelb.addContainerListener(this);
+
+        for (int i = 0; i < blockr; i++) {
+            for (int j = 0; j < blockc; j++) {
+                blocks[i][j] = new JButton();
+                blocks[i][j].addMouseListener(mh);
+                panelb.add(blocks[i][j]);
+            }
+        }
+        reset();
+
+
+
+        getContentPane().setLayout(new BorderLayout());
+        getContentPane().addContainerListener((ContainerListener) this);
+
+        getContentPane().repaint();
+        getContentPane().add(panelb, BorderLayout.CENTER);
+        getContentPane().add(panelmt, BorderLayout.NORTH);
+        setVisible(true);
     }
 
 
@@ -111,6 +162,8 @@ public class Sapper extends JFrame implements ActionListener{
         final JMenuItem exit = new JMenuItem("Exit");
         final JMenu help = new JMenu("Help");
         final JMenuItem helpitem = new JMenuItem("Help");
+
+
 
         menuitem.addActionListener(new ActionListener() {
 
@@ -164,6 +217,7 @@ public class Sapper extends JFrame implements ActionListener{
 
         setJMenuBar(bar);
 
+
         game.add(menuitem);
         game.addSeparator();
         game.add(beginner);
@@ -177,11 +231,23 @@ public class Sapper extends JFrame implements ActionListener{
         bar.add(game);
         bar.add(help);
 
+
+
     }
 
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
+    }
+
+    @Override
+    public void componentAdded(ContainerEvent containerEvent) {
+
+    }
+
+    @Override
+    public void componentRemoved(ContainerEvent containerEvent) {
 
     }
 }
