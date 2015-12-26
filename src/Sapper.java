@@ -1,11 +1,10 @@
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
 import javax.swing.*;
 
-public class Sapper extends JFrame implements ActionListener, ContainerListener{
-    int blockr, blockc, width, heigth, mines,savedblockr,savedblockc,savednum_of_mine, savedlevel, detectedmine;
+public class Sapper extends JFrame implements ActionListener{
+    int blockr, blockc, width, heigth, mines,savednum_of_mine, savedlevel, detectedmine;
     int[][] colour;
     JButton reset = new JButton();
     boolean check = true;
@@ -17,7 +16,8 @@ public class Sapper extends JFrame implements ActionListener, ContainerListener{
     Point p;
     JPanel blocks_panel = new JPanel();
     JPanel mine_time_panel = new JPanel();
-    JTextField field_mine,field_time;
+    JTextField field_mine;
+    JTextField field_time;
     ImageIcon[] icons = new ImageIcon[14];
     int var1,var2;
 
@@ -27,19 +27,19 @@ public class Sapper extends JFrame implements ActionListener, ContainerListener{
         setTitle("Sapper");
         setLocation(650, 300);
         setIcon();
-        setPanel(1, 0, 0, 0);
+        setPanel(1);
         setMenu();
 
         sw = new Stopwatch();
 
         reset.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent a) {
-                Button b= new Button("Restart");
+                //Button b= new Button("Restart");
                 try {
                     sw.stop();
-                    setPanel(savedlevel, savedblockr, savedblockc, savednum_of_mine);
+                    setPanel(savedlevel);
                 } catch (Exception e) {
-                    setPanel(savedlevel, savedblockr, savedblockc, savednum_of_mine);
+                    setPanel(savedlevel);
                 }
                 reset();
 
@@ -59,7 +59,7 @@ public class Sapper extends JFrame implements ActionListener, ContainerListener{
         }
     }
 
-    public void  setPanel(int level, int setr, int setc, int setm){
+    public void  setPanel(int level){
         if (level == 1){
             width = 350;
             heigth = 450;
@@ -79,12 +79,11 @@ public class Sapper extends JFrame implements ActionListener, ContainerListener{
             blockc = 22;
             mines = 150;
         } else if (level == 4){
-            width = (20 * setc);
-            heigth = (24 * setr);
-            blockr = setr;
-            blockc = setc;
-            mines = setm;
-
+            width = 640;
+            heigth = 730;
+            blockr = 22;
+            blockc = 22;
+            mines = 482;
         }
 
 
@@ -104,14 +103,14 @@ public class Sapper extends JFrame implements ActionListener, ContainerListener{
         getContentPane().removeAll();
         blocks_panel.removeAll(); // изменяется размер кубиков
 
-        field_mine = new JTextField("   " + mines, 3);
+        field_mine = new JTextField("" + mines, 3);
         field_mine.setEditable(false);
         field_mine.setFont(new Font("", Font.BOLD, 35));
         field_mine.setBackground(Color.DARK_GRAY);
         field_mine.setForeground(Color.white);
 
 
-        field_time = new JTextField("    0", 3);
+        field_time = new JTextField("   0", 3);
         field_time.setEditable(false);
         field_time.setFont(new Font("", Font.BOLD, 35));
         field_time.setBackground(Color.DARK_GRAY);
@@ -133,10 +132,10 @@ public class Sapper extends JFrame implements ActionListener, ContainerListener{
 
         Dimension d = new Dimension(width, heigth);
         blocks_panel.setPreferredSize(d);
-        blocks_panel.setMinimumSize(blocks_panel.getPreferredSize());// «не рекомендуется» увеличиваться или уменьшаться
+        blocks_panel.setMinimumSize(blocks_panel.getPreferredSize());// Ђне рекомендуетс€ї увеличиватьс€ или уменьшатьс€
         GridLayout gl = new GridLayout(0, blockc);
         blocks_panel.setLayout(gl);
-        blocks_panel.addContainerListener(this);
+        //blocks_panel.addContainerListener(this);
         blocks_panel.setBackground(Color.DARK_GRAY);
         blocks_panel.setBorder(BorderFactory.createEmptyBorder(0,3,0,1));
 
@@ -151,10 +150,11 @@ public class Sapper extends JFrame implements ActionListener, ContainerListener{
         reset();
 
         blocks_panel.revalidate();
+        //blocks_panel.repaint();
 
         BorderLayout bl1 = new BorderLayout();
         getContentPane().setLayout(bl1);
-        getContentPane().addContainerListener((ContainerListener) this);
+        //getContentPane().addContainerListener((ContainerListener) this);
 
         getContentPane().repaint();
         getContentPane().add(blocks_panel, bl1.CENTER);
@@ -173,14 +173,15 @@ public class Sapper extends JFrame implements ActionListener, ContainerListener{
         //JButton center = new JButton("dddd");
 
 
-        JMenu instr = new JMenu("Rules");
-        final JMenuItem rules = new JMenuItem("Rules");
+        //JMenu instr = new JMenu("Rules");
+        //final JMenuItem rules = new JMenuItem("Rules");
 
         JMenu game = new JMenu("Levels");
         final JMenuItem menuitem = new JMenuItem("new game");
         final JMenuItem beginner = new JMenuItem("Beginner");
         final JMenuItem intermediate = new JMenuItem("Intermediate");
         final JMenuItem expert = new JMenuItem("Expert");
+        final JMenuItem hell = new JMenuItem("HEEEELLL!!!");
         final JMenuItem exit = new JMenuItem("Exit");
 
 
@@ -190,25 +191,19 @@ public class Sapper extends JFrame implements ActionListener, ContainerListener{
 
 
 
-        /*rest.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                setpanel(1,0,0,0);
-            }
-        });*/
 
 
         menuitem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                setPanel(1, 0, 0, 0);
+                setPanel(1);
             }
         });
 
         beginner.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent actionEvent) {
                 reset();
-                setPanel(1, 0, 0, 0);
-                beginner.setSelected(true);
+                setPanel(1);
                 savedlevel = 1;
             }
         });
@@ -216,16 +211,14 @@ public class Sapper extends JFrame implements ActionListener, ContainerListener{
         intermediate.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 reset();
-                setPanel(2, 0, 0, 0);
-                intermediate.setSelected(true);
+                setPanel(2);
                 savedlevel = 2;
             }
         });
         expert.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 reset();
-                setPanel(3, 0, 0, 0);
-                expert.setSelected(true);
+                setPanel(3);
                 savedlevel = 3;
             }
         });
@@ -238,6 +231,17 @@ public class Sapper extends JFrame implements ActionListener, ContainerListener{
             }
         });
 
+        hell.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                reset();
+                setPanel(4);
+                JOptionPane.showMessageDialog(null, "Die, die,die, my darling!");
+                savedlevel = 4;
+            }
+        });
+
         setJMenuBar(bar);
 
 
@@ -246,13 +250,14 @@ public class Sapper extends JFrame implements ActionListener, ContainerListener{
         game.add(beginner);
         game.add(intermediate);
         game.add(expert);
+        game.add(hell);
         game.addSeparator();
         game.add(exit);
 
-        instr.add(rules);
+        //instr.add(rules);
 
         bar.add(game);
-        bar.add(instr);
+        //bar.add(instr);
 
 
 
@@ -266,27 +271,14 @@ public class Sapper extends JFrame implements ActionListener, ContainerListener{
 
     }
 
-    @Override
-    public void componentAdded(ContainerEvent containerEvent) {
-
-    }
-
-    @Override
-    public void componentRemoved(ContainerEvent containerEvent) {
-
-    }
 
 
-    class MouseHandler extends MouseAdapter {
-        int blockr, blockc,var1,var2;
-        JButton[][] blocks;
-        boolean check = true;
-        Stopwatch sw;
-        boolean start_time = false;
-
+    class MouseHandler extends MouseAdapter implements ActionListener {
 
         public void mouseClicked(MouseEvent me) {
             if (check == true) {
+
+
                 for (int i = 0; i < blockr; i++) {
                     for (int j = 0; j < blockc; j++) {
                         if (me.getSource() == blocks[i][j]) {
@@ -294,6 +286,7 @@ public class Sapper extends JFrame implements ActionListener, ContainerListener{
                             var2 = j;
                             i = blockr;
                             break;
+
                         }
                     }
                 }
@@ -303,19 +296,24 @@ public class Sapper extends JFrame implements ActionListener, ContainerListener{
                 check = false;
             }
 
+            //sw.Start();
             showValue(me);
             winner();
 
             if (start_time == false) {
-                sw.start(); //время не хочет идти
+                //sw.Start(); //врем€ не хочет идти
                 start_time = true;
             }
 
         }
 
 
+        @Override
+        public void actionPerformed(ActionEvent e) {
 
+        }
     }
+
     public void winner() {
         int q = 0;
         for (int k = 0; k < blockr; k++) {
@@ -333,25 +331,27 @@ public class Sapper extends JFrame implements ActionListener, ContainerListener{
                     blocks[k][l].removeMouseListener(mh);
                 }
             }
-
-            sw.stop();
             JOptionPane.showMessageDialog(this, "Congratulations!");
+            sw.stop();
+
         }
     }
+
+
 
     public void showValue(MouseEvent e) {
         for (int i = 0; i < blockr; i++) {
             for (int j = 0; j < blockc; j++) {
 
                 if (e.getSource() == blocks[i][j]) {
-                    if (e.isMetaDown() == false) {
-                        if (blocks[i][j].getIcon() == icons[10]) {
-                            if (detectedmine < mines) {
-                                detectedmine++;
-                            }
-                            field_mine.setText("" + detectedmine);
-                        }
 
+                    System.out.println(e.getX());
+                    System.out.println(e.getY());
+                    System.out.println(e.getSource());
+                    System.out.println();
+
+
+                    if (e.isMetaDown() == false) {
                         if (count_mine[i][j] == -1) {
                             for (int k = 0; k < blockr; k++) {
                                 for (int l = 0; l < blockc; l++) {
@@ -362,9 +362,10 @@ public class Sapper extends JFrame implements ActionListener, ContainerListener{
                                     blocks[k][l].removeMouseListener(mh);
                                 }
                             }
-                            sw.stop();
-                            reset.setIcon(new ImageIcon(""));
                             JOptionPane.showMessageDialog(null, "Try one more time!");
+                            sw.stop();
+                            //reset.setIcon(new ImageIcon(""));
+
                         } else if (count_mine[i][j] == 0) {
                             setEmpties(i, j);
                         } else {
@@ -427,7 +428,9 @@ public class Sapper extends JFrame implements ActionListener, ContainerListener{
         int R, C;
         colour[row][col] = 'b';
 
-        blocks[row][col].setBackground(Color.GRAY);
+        blocks[row][col].setBackground(Color.LIGHT_GRAY);
+        blocks[row][col].setForeground(Color.LIGHT_GRAY);
+
         blocks[row][col].setIcon(icons[count_mine[row][col]]);
         blocks[row][col].setText("");
         for (int i = 0; i < 8; i++) {
@@ -446,19 +449,12 @@ public class Sapper extends JFrame implements ActionListener, ContainerListener{
         }
     }
 
-    /*public void setIcon() {
-        String name;
 
-        for (int i = 0; i <= 8; i++) {
-            name = i + ".gif";
-            icons[i] = new ImageIcon(name);
-        }
-    }*/
     Random random_rows = new Random();
     Random random_columns = new Random();
 
     public void setBomb() {
-        int row = 0, col = 0;
+        int row, col;
         Boolean[][] flag = new Boolean[blockr][blockc];
 
 
@@ -485,6 +481,7 @@ public class Sapper extends JFrame implements ActionListener, ContainerListener{
             }
         }
     }
+
     public void setIcon() {
         String name;
 
@@ -492,6 +489,6 @@ public class Sapper extends JFrame implements ActionListener, ContainerListener{
             name = i + ".gif";
             icons[i] = new ImageIcon(name);
         }
-        //icons[10] = new ImageIcon("flag.gif");
+
     }
 }
